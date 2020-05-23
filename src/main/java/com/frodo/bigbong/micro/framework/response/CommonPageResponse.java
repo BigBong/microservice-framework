@@ -18,7 +18,7 @@ import java.util.List;
 @Data
 public class CommonPageResponse<T> implements Serializable {
     /**
-     * 状态码
+     * 的状态码
      */
     private Integer code;
 
@@ -30,11 +30,13 @@ public class CommonPageResponse<T> implements Serializable {
     /**
      * 页码
      */
+    @Builder.Default
     private Integer pageNum = 1;
 
     /**
      * 页面大小
      */
+    @Builder.Default
     private Integer pageSize = 20;
 
     /**

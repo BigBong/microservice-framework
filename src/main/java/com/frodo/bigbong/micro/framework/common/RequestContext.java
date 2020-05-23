@@ -21,13 +21,13 @@ public class RequestContext {
     public static final Long SYS_DEFAULT_USER_ID = -1L;
 
     /**
-     * 默认系统用户名
+     * 默认系统用户名称
      **/
     public static final String SYS_DEFAULT_USER_NAME = "system";
     public static final String SESSION_REMOTE_ADDRESS = "session_remote_address";
     public static final String REQUEST_ID = "Request-Id";
     public static final String USER_AGENT = "user-agent";
-    //当前线程没有request请求的情况下，需要在整个线程生命周期中使用的变量放在kvHolder中
+    //当前线程没有request请求的情况下，需要在整个线程生命周期中使用的变量放在kvHolder
     private static final ThreadLocal<Map<String, Object>> kvHolder = new ThreadLocal<>();
 
     private RequestContext() {

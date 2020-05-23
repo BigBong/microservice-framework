@@ -1,10 +1,10 @@
 package com.frodo.bigbong.micro.framework.sal;
 
-import com.frodo.bigbong.micro.framework.util.GsonUtils;
 import com.frodo.bigbong.micro.framework.common.RequestContext;
 import com.frodo.bigbong.micro.framework.exception.BizException;
 import com.frodo.bigbong.micro.framework.response.CommonPageResponse;
 import com.frodo.bigbong.micro.framework.response.CommonResponse;
+import com.frodo.bigbong.micro.framework.util.GsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -29,31 +29,31 @@ public class MicroServiceProxy extends AbstractServiceProxy {
     }
 
     public <Resp> Resp doMicroGetRequest(String relativePath, Map<String, Object> request,
-                                       ParameterizedTypeReference<CommonResponse<Resp>> responseType) {
+                                         ParameterizedTypeReference<CommonResponse<Resp>> responseType) {
         return doMicroGetRequest(relativePath, defaultHeaders(), request, responseType);
     }
 
     public <Resp> Resp doMicroGetRequest(String relativePath, HttpHeaders headers, Map<String, Object> request,
-                                       ParameterizedTypeReference<CommonResponse<Resp>> responseType) {
+                                         ParameterizedTypeReference<CommonResponse<Resp>> responseType) {
         return doMicroRequest(relativePath, HttpMethod.GET, headers, request, responseType);
     }
 
     public <Resp> Resp doMicroPostRequest(String relativePath, Map<String, Object> request,
-                                        ParameterizedTypeReference<CommonResponse<Resp>> responseType) {
+                                          ParameterizedTypeReference<CommonResponse<Resp>> responseType) {
         return doMicroPostRequest(relativePath, defaultHeaders(), request, responseType);
     }
 
     public <Resp> Resp doMicroPostRequest(String relativePath, HttpHeaders headers, Map<String, Object> request,
-                                        ParameterizedTypeReference<CommonResponse<Resp>> responseType) {
+                                          ParameterizedTypeReference<CommonResponse<Resp>> responseType) {
         return doMicroRequest(relativePath, HttpMethod.POST, headers, request, responseType);
     }
 
     private HttpHeaders defaultHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
-            headers.add(RequestContext.SESSION_ORG_ID, String.valueOf(RequestContext.getOrgId()));
-            headers.add(RequestContext.SESSION_ORG_TYPE, String.valueOf(RequestContext.getOrgType()));
-        
+        headers.add(RequestContext.SESSION_ORG_ID, String.valueOf(RequestContext.getOrgId()));
+        headers.add(RequestContext.SESSION_ORG_TYPE, String.valueOf(RequestContext.getOrgType()));
+
         if (RequestContext.getCurrentUserId() != null) {
             headers.add(RequestContext.SESSION_USER_ID, String.valueOf(RequestContext.getCurrentUserId()));
         }
@@ -70,7 +70,7 @@ public class MicroServiceProxy extends AbstractServiceProxy {
 
 
     public <Resp> Resp doMicroRequest(String relativePath, HttpMethod method, HttpHeaders headers, Map<String, Object> request,
-                                    ParameterizedTypeReference<CommonResponse<Resp>> responseType) {
+                                      ParameterizedTypeReference<CommonResponse<Resp>> responseType) {
         if (method == HttpMethod.GET) {
             HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(null, headers);
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getHost() + relativePath);
@@ -90,7 +90,7 @@ public class MicroServiceProxy extends AbstractServiceProxy {
     }
 
     public <Resp> Resp doMicroRequest(String url, HttpMethod method, HttpEntity formEntity,
-                                    ParameterizedTypeReference<CommonResponse<Resp>> responseType) {
+                                      ParameterizedTypeReference<CommonResponse<Resp>> responseType) {
         try {
             long start = System.currentTimeMillis();
 
@@ -117,12 +117,12 @@ public class MicroServiceProxy extends AbstractServiceProxy {
     }
 
     public <Resp> List<Resp> doMicroRequestWithList(String relativePath, Map<String, Object> request,
-                                                  ParameterizedTypeReference<CommonPageResponse<Resp>> responseType) {
+                                                    ParameterizedTypeReference<CommonPageResponse<Resp>> responseType) {
         return doMicroRequestWithList(relativePath, defaultHeaders(), request, responseType);
     }
 
     public <Resp> List<Resp> doMicroRequestWithList(String relativePath, HttpHeaders headers, Map<String, Object> request,
-                                                  ParameterizedTypeReference<CommonPageResponse<Resp>> responseType) {
+                                                    ParameterizedTypeReference<CommonPageResponse<Resp>> responseType) {
         HttpEntity<Map<String, Object>> formEntity = new HttpEntity<>(request, headers);
         try {
             long start = System.currentTimeMillis();

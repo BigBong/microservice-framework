@@ -1,25 +1,14 @@
+apply from: 'dependencyDefinitions.gradle'
+apply plugin: 'java'
+
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
     }
     dependencies {
     }
 }
-
-subprojects {
-    apply plugin: "java"
-
-    repositories {
-        mavenCentral()
-    }
-
-    tasks.withType(JavaCompile) {
-        options.encoding = "UTF-8"
-        options.compilerArgs << "-Xlint:unchecked"
-    }
-}
-
-apply plugin: 'java'
 
 repositories {
     jcenter()
@@ -27,29 +16,30 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor 'org.projectlombok:lombok:1.18.2'
-    compileOnly 'org.projectlombok:lombok:1.18.2'
+    annotationProcessor libraries.lombok
+    compileOnly libraries.lombok
 
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation libraries.gson
 
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.11.0'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.11.0'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.0'
+    implementation libraries.jackson
+    implementation libraries.jackson_databind
+    implementation libraries.jackson_annotations
 
-    implementation 'com.google.guava:guava:29.0-jre'
-    implementation 'org.apache.commons:commons-lang3:3.10'
+    implementation libraries.guava
+    implementation libraries.commons_lang3
 
-    compileOnly 'org.springframework:spring-tx:5.2.6.RELEASE'
-    compileOnly 'org.springframework:spring-aop:5.2.6.RELEASE'
-    compileOnly 'org.springframework:spring-web:5.2.6.RELEASE'
-    implementation 'org.aspectj:aspectjweaver:1.9.5'
+    compileOnly libraries.spring_tx
+    compileOnly libraries.spring_aop
+    compileOnly libraries.spring_web
 
-    compileOnly 'javax.servlet:javax.servlet-api:4.0.0'
+    implementation libraries.aspectjweaver
 
-    implementation 'org.slf4j:slf4j-api:1.7.30'
-    implementation 'org.apache.logging.log4j:log4j-core:2.13.2'
-    implementation 'org.apache.logging.log4j:log4j-api:2.13.2'
-    implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.13.2'
+    compileOnly libraries.servlet
 
-    implementation 'com.lmax:disruptor:3.4.2'
+    implementation libraries.slf4j_api
+    implementation libraries.log4j_core
+    implementation libraries.log4j_api
+    implementation libraries.log4j_slf4j_impl
+
+    implementation libraries.disruptor
 }

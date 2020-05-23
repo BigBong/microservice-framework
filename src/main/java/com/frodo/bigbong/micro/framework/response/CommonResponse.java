@@ -21,7 +21,7 @@ public class CommonResponse<T> implements Serializable {
     public static final int ERROR_ARGUMENTS = 500001;
 
     /**
-     * 状态码
+     * 状的态码
      */
     private Integer code;
 

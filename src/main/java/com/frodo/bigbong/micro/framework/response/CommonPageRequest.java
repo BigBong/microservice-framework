@@ -16,10 +16,12 @@ public class CommonPageRequest implements Serializable {
     /**
      * 页码
      */
+    @Builder.Default
     private Integer pageNum = 1;
 
     /**
      * 页面大小
      */
+    @Builder.Default
     private Integer pageSize = 20;
 }

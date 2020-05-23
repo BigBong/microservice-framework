@@ -11,6 +11,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-public  @interface  MicroServiceMethodAnnotation {
+public @interface MicroServiceMethodAnnotation {
     boolean needPrintArgs() default true;
 }

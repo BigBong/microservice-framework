@@ -7,5 +7,6 @@ package com.frodo.bigbong.micro.framework.concurrent;
  */
 public interface JoinCallable<V> {
     String key();
+
     V call();
 }

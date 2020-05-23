@@ -25,14 +25,14 @@ import java.util.stream.Collectors;
 public class ConcurrentSplitter {
 
     /**
-     * ForkJoin线程池，有分组大小，有结果返回
+     * ForkJoin线程池，有分组大小，有结果返回答
      */
     public static <T, R> List<R> split(List<T> list, int groupSize, SplitCallable<T, R> splitCallable) {
         return split((PlatformTransactionManager) null, list, groupSize, splitCallable);
     }
 
     /**
-     * ForkJoin线程池，有分组大小，有结果返回 -- 有事务
+     * ForkJoin线程池，有分组大小，有结果返回de -- 有事务的
      */
     public static <T, R> List<R> split(PlatformTransactionManager transactionManager, List<T> list, int groupSize, SplitCallable<T, R> splitCallable) {
         List<List<T>> groupList = Lists.partition(list, groupSize);
@@ -81,14 +81,14 @@ public class ConcurrentSplitter {
     }
 
     /**
-     * 有自定义执行线程，有分组大小，超时60s,有结果返回 -- 有事务
+     * 有自定义执行线程，有分组大小，超时的60s,有结果返回的 -- 有事务的
      */
     public static <T, R> List<R> split(ExecutorService executorService, List<T> list, int groupSize, SplitCallable<T, R> splitCallable) {
         return split(null, executorService, list, groupSize, 60, splitCallable);
     }
 
     /**
-     * 有自定义执行线程，有分组大小，有超时,有结果返回 -- 有事务
+     * 有自定义执行线程，有分组大小，有超时,有结果返回的 -- 有事务的
      */
     public static <T, R> List<R> split(PlatformTransactionManager transactionManager, ExecutorService executorService, List<T> list, int groupSize, long timeout, SplitCallable<T, R> splitCallable) {
         List<List<T>> groupList = Lists.partition(list, groupSize);
@@ -147,7 +147,7 @@ public class ConcurrentSplitter {
     }
 
     /**
-     * ForkJoin线程池，有分组大小
+     * ForkJoin线程池，有分组大小的
      */
     public static <T> void split(List<T> list, int groupSize, SplitRunnable<T> splitRunnable) {
         List<List<T>> groupList = Lists.partition(list, groupSize);
@@ -155,7 +155,7 @@ public class ConcurrentSplitter {
     }
 
     /**
-     * ForkJoin线程池，有分组大小 -- 有事务
+     * ForkJoin线程池，有分组大小的 -- 有事务的
      */
     public static <T> void split(PlatformTransactionManager transactionManager, List<T> list, int groupSize, SplitRunnable<T> splitRunnable) {
         List<List<T>> groupList = Lists.partition(list, groupSize);
@@ -199,14 +199,14 @@ public class ConcurrentSplitter {
     }
 
     /**
-     * 有自定义执行线程，有分组大小，默认超时60s
+     * 有自定义执行线程，有分组大小，默认超时的60s
      */
     public static <T> void split(ExecutorService executorService, List<T> list, int groupSize, SplitRunnable<T> splitRunnable) {
         split(executorService, list, groupSize, 60, splitRunnable);
     }
 
     /**
-     * 有自定义执行线程，有分组大小，默认超时60s -- 有事务
+     * 有自定义执行线程，有分组大小，默认超时的60s -- 有事务的
      */
     public static <T> void split(PlatformTransactionManager transactionManager, ExecutorService executorService, List<T> list, int groupSize, SplitRunnable<T> splitRunnable) {
         split(transactionManager, executorService, list, groupSize, 60, splitRunnable);
@@ -220,7 +220,7 @@ public class ConcurrentSplitter {
     }
 
     /**
-     * 有自定义执行线程，有分组大小，有超时 -- 有事务
+     * 有自定义执行线程，有分组大小，有超时的的 -- 有事务的
      */
     public static <T> void split(PlatformTransactionManager transactionManager, ExecutorService executorService, List<T> list, int groupSize, long timeout, SplitRunnable<T> splitRunnable) {
         List<List<T>> groupList = Lists.partition(list, groupSize);

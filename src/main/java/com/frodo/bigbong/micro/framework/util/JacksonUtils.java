@@ -91,9 +91,7 @@ public final class JacksonUtils {
         try {
             WRITER.writeValue(writer, node);
             writer.flush();
-        } catch (JsonGenerationException e) {
-            throw new RuntimeException("How did I get there??", e);
-        } catch (JsonMappingException e) {
+        } catch (JsonGenerationException | JsonMappingException e) {
             throw new RuntimeException("How did I get there??", e);
         } catch (IOException ignored) {
             // cannot happen
@@ -109,7 +107,6 @@ public final class JacksonUtils {
      *
      * <ul>
      *     <li>{@link DeserializationFeature#USE_BIG_DECIMAL_FOR_FLOATS};</li>
-     *     <li>{@link SerializationFeature#WRITE_BIGDECIMAL_AS_PLAIN};</li>
      *     <li>{@link SerializationFeature#INDENT_OUTPUT}.</li>
      * </ul>
      *
@@ -120,7 +117,7 @@ public final class JacksonUtils {
     public static ObjectMapper newMapper() {
         return new ObjectMapper().setNodeFactory(FACTORY)
                 .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
-                .enable(SerializationFeature.WRITE_BIGDECIMAL_AS_PLAIN)
+                .enable(com.fasterxml.jackson.core.JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN)
                 .enable(SerializationFeature.INDENT_OUTPUT)
                 .setSerializationInclusion(JsonInclude.Include.NON_NULL)
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
