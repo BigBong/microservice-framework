@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-public class RequestContext {
+public class RpcContext {
 
     public static final String SESSION_USER_ID = "session_user_id";
     public static final String SESSION_USER_NAME = "session_user_name";
@@ -30,7 +30,7 @@ public class RequestContext {
     //当前线程没有request请求的情况下，需要在整个线程生命周期中使用的变量放在kvHolder
     private static final ThreadLocal<Map<String, Object>> kvHolder = new ThreadLocal<>();
 
-    private RequestContext() {
+    private RpcContext() {
     }
 
     public static void remove() {

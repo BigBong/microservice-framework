@@ -1,4 +1,4 @@
-package com.frodo.bigbong.micro.framework.response;
+package com.frodo.bigbong.micro.framework.common;
 
 import lombok.*;
 
@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommonPageRequest implements Serializable {
+public class RpcPageRequest implements Serializable {
     /**
      * 页码
      */

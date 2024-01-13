@@ -32,7 +32,7 @@ public class MicroServiceSessionInjector {
         Enumeration<String> attributeNames = session.getAttributeNames();
         while (attributeNames.hasMoreElements()) {
             String key = attributeNames.nextElement();
-            RequestContext.setSessionAttribute(key, session.getAttribute(key));
+            RpcContext.setSessionAttribute(key, session.getAttribute(key));
             if (log.isDebugEnabled()) {
                 log.debug("Attributes {} {}", key, session.getAttribute(key));
             }
@@ -48,32 +48,32 @@ public class MicroServiceSessionInjector {
             if (StringUtils.isBlank(value) || value.equalsIgnoreCase("null")) {
                 continue;
             }
-            RequestContext.setSessionAttribute(key, value);
+            RpcContext.setSessionAttribute(key, value);
         }
 
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                RequestContext.setSessionAttribute(cookie.getName(), cookie.getValue());
+                RpcContext.setSessionAttribute(cookie.getName(), cookie.getValue());
                 if (log.isDebugEnabled()) {
                     log.debug("Cookies {} {}", cookie.getName(), cookie.getValue());
                 }
             }
         }
-        RequestContext.setRemoteAddress(servletRequest.getRemoteAddr());
+        RpcContext.setRemoteAddress(servletRequest.getRemoteAddr());
 
         try {
 
-            if (RequestContext.getCurrentUserId() != null) {
-                MDC.put("userId", RequestContext.getCurrentUserId() + "");
+            if (RpcContext.getCurrentUserId() != null) {
+                MDC.put("userId", RpcContext.getCurrentUserId() + "");
             }
 
-            if (StringUtils.isNotBlank(RequestContext.getCurrentUserName())) {
-                RequestContext.setCurrentUserName(URLDecoder.decode(RequestContext.getCurrentUserName(), StandardCharsets.UTF_8.name()));
+            if (StringUtils.isNotBlank(RpcContext.getCurrentUserName())) {
+                RpcContext.setCurrentUserName(URLDecoder.decode(RpcContext.getCurrentUserName(), StandardCharsets.UTF_8.name()));
             }
 
-            if (RequestContext.getRequestId() != null) {
-                MDC.put("reqId", RequestContext.getRequestId() + "");
+            if (RpcContext.getRequestId() != null) {
+                MDC.put("reqId", RpcContext.getRequestId() + "");
             }
 
         } catch (UnsupportedEncodingException e) {
@@ -83,6 +83,6 @@ public class MicroServiceSessionInjector {
         filterChain.doFilter(servletRequest, servletResponse);
 
         MDC.clear();
-        RequestContext.remove();
+        RpcContext.remove();
     }
 }

@@ -1,9 +1,9 @@
 package com.frodo.bigbong.micro.framework.sal;
 
-import com.frodo.bigbong.micro.framework.common.RequestContext;
+import com.frodo.bigbong.micro.framework.common.RpcContext;
 import com.frodo.bigbong.micro.framework.exception.BizException;
-import com.frodo.bigbong.micro.framework.response.CommonPageResponse;
-import com.frodo.bigbong.micro.framework.response.CommonResponse;
+import com.frodo.bigbong.micro.framework.common.RpcPageResponse;
+import com.frodo.bigbong.micro.framework.common.RpcResponse;
 import com.frodo.bigbong.micro.framework.util.GsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -29,48 +29,48 @@ public class MicroServiceProxy extends AbstractServiceProxy {
     }
 
     public <Resp> Resp doMicroGetRequest(String relativePath, Map<String, Object> request,
-                                         ParameterizedTypeReference<CommonResponse<Resp>> responseType) {
+                                         ParameterizedTypeReference<RpcResponse<Resp>> responseType) {
         return doMicroGetRequest(relativePath, defaultHeaders(), request, responseType);
     }
 
     public <Resp> Resp doMicroGetRequest(String relativePath, HttpHeaders headers, Map<String, Object> request,
-                                         ParameterizedTypeReference<CommonResponse<Resp>> responseType) {
+                                         ParameterizedTypeReference<RpcResponse<Resp>> responseType) {
         return doMicroRequest(relativePath, HttpMethod.GET, headers, request, responseType);
     }
 
     public <Resp> Resp doMicroPostRequest(String relativePath, Map<String, Object> request,
-                                          ParameterizedTypeReference<CommonResponse<Resp>> responseType) {
+                                          ParameterizedTypeReference<RpcResponse<Resp>> responseType) {
         return doMicroPostRequest(relativePath, defaultHeaders(), request, responseType);
     }
 
     public <Resp> Resp doMicroPostRequest(String relativePath, HttpHeaders headers, Map<String, Object> request,
-                                          ParameterizedTypeReference<CommonResponse<Resp>> responseType) {
+                                          ParameterizedTypeReference<RpcResponse<Resp>> responseType) {
         return doMicroRequest(relativePath, HttpMethod.POST, headers, request, responseType);
     }
 
     private HttpHeaders defaultHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
-        headers.add(RequestContext.SESSION_ORG_ID, String.valueOf(RequestContext.getOrgId()));
-        headers.add(RequestContext.SESSION_ORG_TYPE, String.valueOf(RequestContext.getOrgType()));
+        headers.add(RpcContext.SESSION_ORG_ID, String.valueOf(RpcContext.getOrgId()));
+        headers.add(RpcContext.SESSION_ORG_TYPE, String.valueOf(RpcContext.getOrgType()));
 
-        if (RequestContext.getCurrentUserId() != null) {
-            headers.add(RequestContext.SESSION_USER_ID, String.valueOf(RequestContext.getCurrentUserId()));
+        if (RpcContext.getCurrentUserId() != null) {
+            headers.add(RpcContext.SESSION_USER_ID, String.valueOf(RpcContext.getCurrentUserId()));
         }
         try {
-            headers.add(RequestContext.SESSION_USER_NAME, URLEncoder.encode(RequestContext.getCurrentUserName(), "UTF-8"));
+            headers.add(RpcContext.SESSION_USER_NAME, URLEncoder.encode(RpcContext.getCurrentUserName(), "UTF-8"));
         } catch (Exception e) {
             log.warn("SESSION_USER_NAME ", e);
         }
-        if (RequestContext.getRequestId() != null) {
-            headers.add(RequestContext.REQUEST_ID, RequestContext.getRequestId());
+        if (RpcContext.getRequestId() != null) {
+            headers.add(RpcContext.REQUEST_ID, RpcContext.getRequestId());
         }
         return headers;
     }
 
 
     public <Resp> Resp doMicroRequest(String relativePath, HttpMethod method, HttpHeaders headers, Map<String, Object> request,
-                                      ParameterizedTypeReference<CommonResponse<Resp>> responseType) {
+                                      ParameterizedTypeReference<RpcResponse<Resp>> responseType) {
         if (method == HttpMethod.GET) {
             HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(null, headers);
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getHost() + relativePath);
@@ -90,19 +90,19 @@ public class MicroServiceProxy extends AbstractServiceProxy {
     }
 
     public <Resp> Resp doMicroRequest(String url, HttpMethod method, HttpEntity formEntity,
-                                      ParameterizedTypeReference<CommonResponse<Resp>> responseType) {
+                                      ParameterizedTypeReference<RpcResponse<Resp>> responseType) {
         try {
             long start = System.currentTimeMillis();
 
             log.info("{} url: [{}], params: [{}]", method, url, formEntity.toString());
 
-            ResponseEntity<CommonResponse<Resp>> responseEntity = getRestTemplate().exchange(url, method,
+            ResponseEntity<RpcResponse<Resp>> responseEntity = getRestTemplate().exchange(url, method,
                     formEntity, responseType);
 
             start = System.currentTimeMillis() - start;
             log.info("{} url: [{}] Response: [{}], take time {}ms", method, url, GsonUtils.toJson(responseEntity), start);
             if (responseEntity.getStatusCode() == HttpStatus.OK) {
-                CommonResponse<Resp> remoteResponse = responseEntity.getBody();
+                RpcResponse<Resp> remoteResponse = responseEntity.getBody();
                 return unWarpResponse(remoteResponse);
             } else {
                 throw new RuntimeException(getServiceName() + "异常 " + responseEntity.getStatusCode());
@@ -117,24 +117,24 @@ public class MicroServiceProxy extends AbstractServiceProxy {
     }
 
     public <Resp> List<Resp> doMicroRequestWithList(String relativePath, Map<String, Object> request,
-                                                    ParameterizedTypeReference<CommonPageResponse<Resp>> responseType) {
+                                                    ParameterizedTypeReference<RpcPageResponse<Resp>> responseType) {
         return doMicroRequestWithList(relativePath, defaultHeaders(), request, responseType);
     }
 
     public <Resp> List<Resp> doMicroRequestWithList(String relativePath, HttpHeaders headers, Map<String, Object> request,
-                                                    ParameterizedTypeReference<CommonPageResponse<Resp>> responseType) {
+                                                    ParameterizedTypeReference<RpcPageResponse<Resp>> responseType) {
         HttpEntity<Map<String, Object>> formEntity = new HttpEntity<>(request, headers);
         try {
             long start = System.currentTimeMillis();
             log.info("Post/Get url: [{}], params: [{}]", getHost() + relativePath, GsonUtils.toJson(request));
 
-            ResponseEntity<CommonPageResponse<Resp>> responseEntity = getRestTemplate().exchange(getHost() + relativePath, HttpMethod.POST,
+            ResponseEntity<RpcPageResponse<Resp>> responseEntity = getRestTemplate().exchange(getHost() + relativePath, HttpMethod.POST,
                     formEntity, responseType);
 
             start = System.currentTimeMillis() - start;
             log.info("Post/Get url: [{}] Response: [{}], take time {}ms", getHost() + relativePath, GsonUtils.toJson(responseEntity), start);
             if (responseEntity.getStatusCode() == HttpStatus.OK) {
-                CommonPageResponse<Resp> remoteResponse = responseEntity.getBody();
+                RpcPageResponse<Resp> remoteResponse = responseEntity.getBody();
                 return unWarpResponse(remoteResponse);
             } else {
                 throw new RuntimeException(getServiceName() + "异常 " + responseEntity.getStatusCode());
@@ -148,7 +148,7 @@ public class MicroServiceProxy extends AbstractServiceProxy {
         }
     }
 
-    public <Resp> Resp unWarpResponse(CommonResponse<Resp> remoteResponse) {
+    public <Resp> Resp unWarpResponse(RpcResponse<Resp> remoteResponse) {
         if (remoteResponse == null) {
             throw new RuntimeException(this.getServiceName() + "服务内部异常");
         } else if (!remoteResponse.isOk()) {
@@ -159,7 +159,7 @@ public class MicroServiceProxy extends AbstractServiceProxy {
         }
     }
 
-    public <Resp> List<Resp> unWarpResponse(CommonPageResponse<Resp> remoteResponse) {
+    public <Resp> List<Resp> unWarpResponse(RpcPageResponse<Resp> remoteResponse) {
         if (remoteResponse == null) {
             throw new RuntimeException(this.getServiceName() + "服务内部异常");
         } else if (!remoteResponse.isOk()) {

@@ -1,6 +1,6 @@
 package com.frodo.bigbong.micro.framework.sal;
 
-import com.frodo.bigbong.micro.framework.common.RequestContext;
+import com.frodo.bigbong.micro.framework.common.RpcContext;
 import com.frodo.bigbong.micro.framework.exception.BizException;
 import com.frodo.bigbong.micro.framework.util.GsonUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -53,9 +53,9 @@ public class AbstractServiceProxy {
     private HttpHeaders defaultHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
-        headers.add(RequestContext.SESSION_ORG_ID, String.valueOf(RequestContext.getOrgId()));
-        headers.add(RequestContext.SESSION_ORG_TYPE, String.valueOf(RequestContext.getOrgType()));
-        headers.add(RequestContext.REQUEST_ID, RequestContext.getRequestId());
+        headers.add(RpcContext.SESSION_ORG_ID, String.valueOf(RpcContext.getOrgId()));
+        headers.add(RpcContext.SESSION_ORG_TYPE, String.valueOf(RpcContext.getOrgType()));
+        headers.add(RpcContext.REQUEST_ID, RpcContext.getRequestId());
         return headers;
     }
 

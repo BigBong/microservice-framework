@@ -1,10 +1,10 @@
 package com.frodo.bigbong.micro.framework.interceptor;
 
-import com.frodo.bigbong.micro.framework.common.RequestContext;
+import com.frodo.bigbong.micro.framework.common.RpcContext;
 import com.frodo.bigbong.micro.framework.exception.ArgumentException;
 import com.frodo.bigbong.micro.framework.exception.BizException;
-import com.frodo.bigbong.micro.framework.response.CommonPageResponse;
-import com.frodo.bigbong.micro.framework.response.CommonResponse;
+import com.frodo.bigbong.micro.framework.common.RpcPageResponse;
+import com.frodo.bigbong.micro.framework.common.RpcResponse;
 import com.frodo.bigbong.micro.framework.util.GsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -17,7 +17,7 @@ import org.springframework.util.ClassUtils;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-import static com.frodo.bigbong.micro.framework.response.CommonResponse.ERROR_ARGUMENTS;
+import static com.frodo.bigbong.micro.framework.common.RpcResponse.ERROR_ARGUMENTS;
 
 /**
  * @author frodoking on 2019/10/18.
@@ -27,12 +27,12 @@ public class MicroServiceAroundAdvice {
 
     public static Object around(ProceedingJoinPoint joinPoint) {
         long startTime = System.currentTimeMillis();
-        String requestId = RequestContext.getRequestId();
+        String requestId = RpcContext.getRequestId();
         if (StringUtils.isBlank(requestId)) {
             requestId = "reqIdNA";
         }
         MDC.put("reqId", requestId);
-        String remoteIP = RequestContext.getRemoteAddress();
+        String remoteIP = RpcContext.getRemoteAddress();
         if (StringUtils.isBlank(remoteIP)) {
             remoteIP = "remIpNA";
         }
@@ -45,32 +45,32 @@ public class MicroServiceAroundAdvice {
             object = joinPoint.proceed();
             return object;
         } catch (Throwable throwable) {
-            object = CommonResponse.error(throwable.getMessage());
+            object = RpcResponse.error(throwable.getMessage());
             if (throwable instanceof ArgumentException) {
                 ArgumentException argumentException = (ArgumentException) throwable;
                 log.warn("服务参数异常 {}", argumentException.getMessage());
                 Class returnType = ((MethodSignature) joinPoint.getSignature()).getReturnType();
-                if (returnType == CommonResponse.class) {
-                    object = CommonResponse.error(ERROR_ARGUMENTS, argumentException.getMessage());
-                } else if (returnType == CommonPageResponse.class) {
-                    object = CommonPageResponse.error(ERROR_ARGUMENTS, argumentException.getMessage());
+                if (returnType == RpcResponse.class) {
+                    object = RpcResponse.error(ERROR_ARGUMENTS, argumentException.getMessage());
+                } else if (returnType == RpcPageResponse.class) {
+                    object = RpcPageResponse.error(ERROR_ARGUMENTS, argumentException.getMessage());
                 }
             } else if (throwable instanceof BizException) {
                 BizException bizException = (BizException) throwable;
                 log.warn("服务业务异常 {} : {}", bizException.getErrorCode(), bizException.getMessage());
                 Class returnType = ((MethodSignature) joinPoint.getSignature()).getReturnType();
-                if (returnType == CommonResponse.class) {
-                    object = CommonResponse.error(bizException.getErrorCode(), bizException.getMessage());
-                } else if (returnType == CommonPageResponse.class) {
-                    object = CommonPageResponse.error(bizException.getErrorCode(), bizException.getMessage());
+                if (returnType == RpcResponse.class) {
+                    object = RpcResponse.error(bizException.getErrorCode(), bizException.getMessage());
+                } else if (returnType == RpcPageResponse.class) {
+                    object = RpcPageResponse.error(bizException.getErrorCode(), bizException.getMessage());
                 }
             } else {
                 Class returnType = ((MethodSignature) joinPoint.getSignature()).getReturnType();
                 log.error("服务异常 ", throwable);
-                if (returnType == CommonResponse.class) {
-                    object = CommonResponse.error(throwable.getMessage());
-                } else if (returnType == CommonPageResponse.class) {
-                    object = CommonPageResponse.error(throwable.getMessage());
+                if (returnType == RpcResponse.class) {
+                    object = RpcResponse.error(throwable.getMessage());
+                } else if (returnType == RpcPageResponse.class) {
+                    object = RpcPageResponse.error(throwable.getMessage());
                 }
             }
 
@@ -86,7 +86,7 @@ public class MicroServiceAroundAdvice {
 
     public static Object aroundLocalService(ProceedingJoinPoint joinPoint, Boolean needPrintArgs) {
         long startTime = System.currentTimeMillis();
-        String requestId = RequestContext.getRequestId();
+        String requestId = RpcContext.getRequestId();
         if (StringUtils.isBlank(requestId)) {
             requestId = "reqIdNA";
         }
