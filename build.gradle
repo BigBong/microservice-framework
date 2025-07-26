@@ -4,16 +4,18 @@ apply plugin: 'maven-publish'
 
 buildscript {
     repositories {
-        jcenter()
         mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+        mavenLocal()
     }
     dependencies {
     }
 }
 
 repositories {
-    jcenter()
     mavenCentral()
+    maven { url "https://plugins.gradle.org/m2/" }
+    mavenLocal()
 }
 
 jar {
