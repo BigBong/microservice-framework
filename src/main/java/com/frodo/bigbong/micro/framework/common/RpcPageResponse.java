@@ -1,9 +1,6 @@
 package com.frodo.bigbong.micro.framework.common;
 
 import com.google.common.collect.Lists;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.util.List;
@@ -11,13 +8,27 @@ import java.util.List;
 /**
  * @author frodoking on 2019/10/18.
  */
-@EqualsAndHashCode(callSuper = true)
-@Data
-@SuperBuilder
 public class RpcPageResponse<T> extends RpcResponse<PaginationData<T>> implements Serializable {
 
     public static <T> RpcPageResponse<T> warp(Integer code, String message, PaginationData<T> page) {
-        return (RpcPageResponse<T>) RpcPageResponse.<T>builder().code(code).message(message).data(page).build();
+        RpcPageResponse <T> res = new RpcPageResponse<>();
+        res.setCode(code);
+        res.setMessage(message);
+        res.setData(page);
+        return res;
+    }
+
+    public static <T> RpcPageResponse<T> warp(Integer code, String message, Integer pageNum, Integer pageSize,
+                                              Long totalSize, List<T> data) {
+        PaginationData<T> paginationData = PaginationData.<T>builder()
+                .list(data)
+                .pagination(Pagination.builder()
+                        .pageNum(pageNum)
+                        .pageSize(pageSize)
+                        .totalSize(totalSize).build())
+                .build();
+
+        return warp(code, message, paginationData);
     }
 
     public static <T> RpcPageResponse<T> warp(Integer code, String message, List<T> data) {
@@ -33,44 +44,18 @@ public class RpcPageResponse<T> extends RpcResponse<PaginationData<T>> implement
     }
 
     public static <T> RpcPageResponse<T> success(Integer pageNum, Integer pageSize, Long totalSize, List<T> data) {
-        PaginationData<T> build = PaginationData.<T>builder()
-                .list(data)
-                .pagination(Pagination.builder()
-                        .pageNum(pageNum)
-                        .pageSize(pageSize)
-                        .totalSize(totalSize).build())
-                .build();
-        return (RpcPageResponse<T>) RpcPageResponse.<T>builder().code(RpcResponse.SUCCESS).message("success").data(build).build();
+        return warp(RpcResponse.SUCCESS, "success", pageNum, pageSize, totalSize, data);
     }
 
     public static <T> RpcPageResponse<T> success(String message, List<T> data) {
-        return (RpcPageResponse<T>) RpcPageResponse.<T>builder().code(RpcResponse.SUCCESS).message(message).data(data).build();
+        return warp(RpcResponse.SUCCESS, message, 0, 20, 0L, data);
     }
 
-    public static <T> RpcPageResponse<T> success(String message, Integer pageNum, Integer pageSize,
-                                                 Long totalSize, List<T> data) {
-        PaginationData<T> build = PaginationData.<T>builder()
-                .list(data)
-                .pagination(Pagination.builder()
-                        .pageNum(pageNum)
-                        .pageSize(pageSize)
-                        .totalSize(totalSize).build())
-                .build();
-        return (RpcPageResponse<T>) RpcPageResponse.<T>builder().code(RpcResponse.SUCCESS).message(message).data(build).build();
+    public static <T> RpcPageResponse<T> wrapError(String message) {
+        return wrapError(RpcResponse.ERROR, message);
     }
 
-    public static <T> RpcResponse<T> error(String message) {
-        return error(RpcResponse.ERROR, message);
-    }
-
-    public static <T> RpcResponse<T> error(Integer code, String message) {
-        PaginationData<T> build = PaginationData.<T>builder()
-                .list(Lists.newArrayList())
-                .pagination(Pagination.builder()
-                        .pageNum(0)
-                        .pageSize(20)
-                        .totalSize(0L).build())
-                .build();
-        return RpcPageResponse.<T>builder().code(code).message(message).data(build).build();
+    public static <T> RpcPageResponse<T> wrapError(Integer code, String message) {
+        return warp(code, message, 0, 20, 0L, Lists.newArrayList());
     }
 }

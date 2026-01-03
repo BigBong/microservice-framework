@@ -1,19 +1,17 @@
 package com.frodo.bigbong.micro.framework.common;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import java.io.Serializable;
 
 /**
  * @author frodoking on 2019/10/18.
  */
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class RpcResponse<T> implements Serializable {
 
     public static final int SUCCESS = 200;
@@ -35,6 +33,7 @@ public class RpcResponse<T> implements Serializable {
      */
     private T data;
 
+    @JsonIgnore
     public boolean isOk() {
         return code == SUCCESS;
     }

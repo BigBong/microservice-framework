@@ -18,7 +18,7 @@ ext.versions = [
         commons_httpclient : '3.1',
         commons_pool       : '1.6',
         commons_cli        : '1.0',
-        lombok             : '1.18.2',
+        lombok             : '1.18.30',
         guava              : '29.0-jre',
         gson               : '2.8.6',
         ST4                : '4.0.8',

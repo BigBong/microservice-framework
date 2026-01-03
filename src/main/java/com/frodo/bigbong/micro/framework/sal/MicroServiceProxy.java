@@ -166,7 +166,7 @@ public class MicroServiceProxy extends AbstractServiceProxy {
             log.info(this.getServiceName() + "内部异常 msg [" + remoteResponse.getMessage() + "]");
             throw new BizException(remoteResponse.getCode(), remoteResponse.getMessage());
         } else {
-            return remoteResponse.getData();
+            return remoteResponse.getData().getList();
         }
     }
 }
