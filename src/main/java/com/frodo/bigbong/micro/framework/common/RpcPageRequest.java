@@ -17,7 +17,7 @@ public class RpcPageRequest implements Serializable {
      * 页码
      */
     @Builder.Default
-    private Integer pageNum = 1;
+    private Integer page = 1;
 
     /**
      * 页面大小

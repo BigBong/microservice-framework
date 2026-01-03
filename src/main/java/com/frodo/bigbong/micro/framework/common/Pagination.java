@@ -13,7 +13,7 @@ public class Pagination implements Serializable {
      * 页码
      */
     @Builder.Default
-    private Integer pageNum = 1;
+    private Integer page = 1;
 
     /**
      * 页面大小
@@ -25,6 +25,13 @@ public class Pagination implements Serializable {
      * 总数
      */
     @Builder.Default
-    private Long totalSize = 0L;
+    private Long total = 0L;
+
+
+    /**
+     * 总页数
+     */
+    @Builder.Default
+    private Integer totalPages = 0;
 
 }

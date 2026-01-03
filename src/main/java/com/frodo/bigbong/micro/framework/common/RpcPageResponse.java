@@ -18,15 +18,20 @@ public class RpcPageResponse<T> extends RpcResponse<PaginationData<T>> implement
         return res;
     }
 
-    public static <T> RpcPageResponse<T> warp(Integer code, String message, Integer pageNum, Integer pageSize,
+    public static <T> RpcPageResponse<T> warp(Integer code, String message, Integer page, Integer pageSize,
                                               Long totalSize, List<T> data) {
         PaginationData<T> paginationData = PaginationData.<T>builder()
                 .list(data)
                 .pagination(Pagination.builder()
-                        .pageNum(pageNum)
+                        .page(page)
                         .pageSize(pageSize)
-                        .totalSize(totalSize).build())
+                        .total(totalSize).build())
                 .build();
+
+        if (page != null && pageSize != null && totalSize != null) {
+            Integer totalPages = (int) ((totalSize + pageSize - 1) / pageSize);
+            paginationData.getPagination().setTotalPages(totalPages);
+        }
 
         return warp(code, message, paginationData);
     }
@@ -43,8 +48,8 @@ public class RpcPageResponse<T> extends RpcResponse<PaginationData<T>> implement
         return warp(RpcResponse.SUCCESS, "success", page);
     }
 
-    public static <T> RpcPageResponse<T> success(Integer pageNum, Integer pageSize, Long totalSize, List<T> data) {
-        return warp(RpcResponse.SUCCESS, "success", pageNum, pageSize, totalSize, data);
+    public static <T> RpcPageResponse<T> success(Integer page, Integer pageSize, Long totalSize, List<T> data) {
+        return warp(RpcResponse.SUCCESS, "success", page, pageSize, totalSize, data);
     }
 
     public static <T> RpcPageResponse<T> success(String message, List<T> data) {
